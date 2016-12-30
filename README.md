@@ -1,7 +1,7 @@
 # go-fiat
 
-Package **fiat** provides useful tools for adding meta-data to structs, and then
-extract the struct's data, through the view of this meta-data.
+Package **fiat** makes it so you can add "constant" fields to a struct, as well as "dynamic" fields
+to a struct whose values are derived from code and the other values of the struct.
 
 
 ## Documention
