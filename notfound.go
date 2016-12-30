@@ -11,10 +11,11 @@ type NotFoundComplainer interface {
 
 type internalNotFoundComplainer struct{
 	name string
+	have []string
 }
 
 func (receiver internalNotFoundComplainer) Error() string {
-	return fmt.Sprintf("Not Found: %q", receiver.name)
+	return fmt.Sprintf("Not Found: %q; %v", receiver.name, receiver.have)
 }
 
 func (internalNotFoundComplainer) NotFoundComplainer() {

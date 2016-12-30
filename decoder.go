@@ -71,6 +71,26 @@ func (receiver *Decoder) init() {
 	receiver.data = m
 }
 
+func (receiver *Decoder) keys() []string {
+	if nil == receiver {
+		return []string(nil)
+	}
+
+	data := receiver.data
+	if nil == data {
+		return []string(nil)
+	}
+	if 0 >= len(data) {
+		return []string(nil)
+	}
+
+	ks := []string(nil)
+	for k, _ := range data {
+		ks = append(ks, k)
+	}
+
+	return ks
+}
 
 func (receiver *Decoder) Err() error {
 	if nil == receiver {
@@ -347,18 +367,18 @@ func (receiver *Decoder) Interface(name string) (interface{}, error) {
 
 	values, ok := data[name]
 	if !ok {
-		return 0, internalNotFoundComplainer{name:name}
+		return 0, internalNotFoundComplainer{name:name, have: receiver.keys()}
 	}
 	if nil == values {
-		return 0, internalNotFoundComplainer{name:name}
+		return 0, internalNotFoundComplainer{name:name, have: receiver.keys()}
 	}
 	if 0 >= len(values) {
-		return 0, internalNotFoundComplainer{name:name}
+		return 0, internalNotFoundComplainer{name:name, have: receiver.keys()}
 	}
 
 	valueInterface := values[0]
 	if nil == valueInterface {
-		return 0, internalNotFoundComplainer{name:name}
+		return 0, internalNotFoundComplainer{name:name, have: receiver.keys()}
 	}
 
 	if command, ok := valueInterface.(internalCommandWrapper); ok {
