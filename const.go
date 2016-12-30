@@ -1,6 +1,6 @@
 package fiat
 
-// Const is used a constant value to a Go struct.
+// Const is used to add a constant value to a Go struct.
 //
 // For example:
 //
