@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestDecoderBoolFromUint8(t *testing.T) {
+func TestDecoderBoolFromBool(t *testing.T) {
 
 	tests := []struct{
 		Value bool
