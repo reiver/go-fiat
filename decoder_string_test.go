@@ -92,6 +92,9 @@ func TestDecoderStringFromRune(t *testing.T) {
 		{
 			Value: utf8.MaxRune,
 		},
+		{
+			Value: 56270, // This is an invaid rune.
+		},
 
 
 
@@ -143,6 +146,11 @@ func TestDecoderStringFromRune(t *testing.T) {
 
 
 	for testNumber, test := range tests {
+
+		// Skip invalid runes.
+		if !utf8.ValidRune(test.Value) {
+			continue
+		}
 
 		var decoder Decoder
 
