@@ -21,6 +21,10 @@ func (receiver *internalRegistrar) Register(name string, driver Driver) error {
 	receiver.mutex.Lock()
 	defer receiver.mutex.Unlock()
 
+	if nil == receiver.m {
+		receiver.m = map[string]Driver{}
+	}
+
 	if _, ok := receiver.m[name]; ok {
 		return errFound
 	}
@@ -37,6 +41,10 @@ func (receiver *internalRegistrar) Obtain(name string) (Driver, error) {
 
 	receiver.mutex.RLock()
 	defer receiver.mutex.RUnlock()
+
+	if nil == receiver.m {
+		receiver.m = map[string]Driver{}
+	}
 
 	driver, ok := receiver.m[name]
 	if !ok {
