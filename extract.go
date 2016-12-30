@@ -155,7 +155,7 @@ func extractConst(v interface{}, fieldNumber int, reflectedStructValue reflect.V
 		return name, value, nil
 	}
 
-	return "", nil, fmt.Errorf("For type %T and field %q, missing %q or %q tag on struct field of type fiat.Const. Tag: %q", v, reflectedStructField.Name, valueKeyNormal, valueKeyMultiLine, string(reflectedStructField.Tag))
+	return "", nil, fmt.Errorf("For type %T and field %q, missing %q or %q tag on struct field of type fiat.Const. Tag: %q. It is also possible someone made a syntax error in the struct tag; you may want to check that too.", v, reflectedStructField.Name, valueKeyNormal, valueKeyMultiLine, string(reflectedStructField.Tag))
 }
 
 // extractEval is used when a struct field is of the special type fiat.Eval.
@@ -203,7 +203,7 @@ func extractEval(v interface{}, fieldNumber int, reflectedStructValue reflect.Va
 		return name, value, nil
 	}
 
-	return "", nil, fmt.Errorf("For type %T and field %q, missing %q or %q tag on struct field of type fiat.Eval. Tag: %q", v, reflectedStructField.Name, valueKeyNormal, valueKeyMultiLine, string(reflectedStructField.Tag))
+	return "", nil, fmt.Errorf("For type %T and field %q, missing %q or %q tag on struct field of type fiat.Eval. Tag: %q. It is also possible someone made a syntax error in the struct tag; you may want to check that too.", v, reflectedStructField.Name, valueKeyNormal, valueKeyMultiLine, string(reflectedStructField.Tag))
 }
 
 // extractDefault is used when a struct field is NOT of the special type fiat.Const.
