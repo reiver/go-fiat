@@ -48,7 +48,7 @@ func (receiver *internalRegistrar) Obtain(name string) (Driver, error) {
 
 	driver, ok := receiver.m[name]
 	if !ok {
-		return nil, errNotFound
+		return nil, internalNotFoundComplainer{name}
 	}
 	if nil == driver {
 		return nil, errNilDriver

@@ -3,6 +3,8 @@ package fiat
 import (
 	"github.com/reiver/go-fiat/driver"
 
+	"bytes"
+	"errors"
 	"fmt"
 	"time"
 )
@@ -363,6 +365,17 @@ func (receiver *Decoder) Interface(name string) (interface{}, error) {
 
 		driver, err := fiatdriver.Registry.Obtain(command.Type)
 		if nil != err {
+			if _, ok := err.(fiatdriver.NotFoundComplainer); ok {
+				var buffer bytes.Buffer
+
+				fmt.Fprintf(&buffer, "Could not find driver for fiat.type=%q for field with fiat.name=%q.", command.Type, name)
+				if "" == command.Type {
+					fmt.Fprintf(&buffer, " Is it possible that someone forgot to add a \"fiat.type\" struct tag to the field?")
+				}
+
+				err = errors.New(buffer.String())
+			}
+
 			return 0, err
 		}
 
