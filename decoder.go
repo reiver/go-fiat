@@ -360,6 +360,7 @@ func (receiver *Decoder) Interface(name string) (interface{}, error) {
 		if err := receiver.err; nil != err {
 			return 0, err
 		}
+		data = receiver.data
 		if nil == data {
 			return 0, errInternalError
 		}
