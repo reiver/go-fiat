@@ -9,7 +9,8 @@ import (
 	"time"
 )
 
-// Decoder is a tool that enables you to get the inferred key-value pairs from a struct.
+// Decoder is a tool that enables you to get the inferred key-value pairs from a struct;
+// as well as decode (some or all) of the inferred key-value pairs into another struct.
 //
 // Example:
 //
