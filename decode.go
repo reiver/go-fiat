@@ -1,8 +1,12 @@
 package fiat
 
 import (
+	"github.com/reiver/go-fiat/driver"
+
 	"github.com/reiver/go-cast"
 
+	"bytes"
+	"errors"
 	"fmt"
 	"reflect"
 )
@@ -89,6 +93,34 @@ func decode(data map[string][]interface{}, v interface{}) error {
 			continue
 		}
 		value := values[0]
+
+
+		if command, ok := value.(internalCommandWrapper); ok {
+
+			driver, err := fiatdriver.Registry.Obtain(command.Type)
+			if nil != err {
+				if _, ok := err.(fiatdriver.NotFoundComplainer); ok {
+					var buffer bytes.Buffer
+
+					fmt.Fprintf(&buffer, "Could not find driver for fiat.type=%q for field with fiat.name=%q.", command.Type, name)
+					if "" == command.Type {
+						fmt.Fprintf(&buffer, " Is it possible that someone forgot to add a \"fiat.type\" struct tag to the field?")
+					}
+
+					err = errors.New(buffer.String())
+				}
+
+				return err
+			}
+
+			evaledValue, err := driver.Eval(command.Code, data)
+			if nil != err {
+				return err
+			}
+
+			value = evaledValue
+		}
+
 
 		var castedValue interface{}
 		{
