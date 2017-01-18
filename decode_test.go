@@ -44,6 +44,10 @@ func TestDecode(t *testing.T) {
 		"m3_short":  []interface{}{"not here"},
 		"m3_normal": []interface{}{"not here either"},
 		"m3_long":   []interface{}{"HERE!"},
+
+		"sstr1": []interface{}{"Str ONE"},
+		"sstr2": []interface{}{"Str TWO"},
+		"sstr3": []interface{}{"Str THREE"},
 	}
 
 	type myStruct struct {
@@ -74,6 +78,10 @@ func TestDecode(t *testing.T) {
 		M1 bool   `fiat:"m1_short" fiat.name:"m1_normal" fiat.target.name:"m1_long"`
 		M2 int64  `fiat:"m2_short" fiat.name:"m2_normal" fiat.target.name:"m2_long"`
 		M3 string `fiat:"m3_short" fiat.name:"m3_normal" fiat.target.name:"m3_long"`
+
+		SStr1 scannableString `fiat:"sstr1"`
+		SStr2 scannableString `fiat.name:"sstr2"`
+		SStr3 scannableString `fiat.target.name:"sstr3"`
 	}
 
 	var x myStruct
@@ -180,6 +188,43 @@ func TestDecode(t *testing.T) {
 	if expected, actual := "HERE!", x.M3; expected != actual {
 		t.Errorf("Expected %v, but actually got %v.", expected, actual)
 		return
+	}
+
+	{
+		actual, err := x.SStr1.String()
+		if nil != err {
+			t.Errorf("Did not expect an error, but actually got one: (%T) %v", err, err)
+			return
+		}
+
+		if expected := "Str ONE"; expected != actual {
+			t.Errorf("Expected (%T) %#v, but actually got (%T) %#v.", expected, expected, actual, actual)
+			return
+		}
+	}
+	{
+		actual, err := x.SStr2.String()
+		if nil != err {
+			t.Errorf("Did not expect an error, but actually got one: (%T) %v", err, err)
+			return
+		}
+
+		if expected := "Str TWO"; expected != actual {
+			t.Errorf("Expected (%T) %#v, but actually got (%T) %#v.", expected, expected, actual, actual)
+			return
+		}
+	}
+	{
+		actual, err := x.SStr3.String()
+		if nil != err {
+			t.Errorf("Did not expect an error, but actually got one: (%T) %v", err, err)
+			return
+		}
+
+		if expected := "Str THREE"; expected != actual {
+			t.Errorf("Expected (%T) %#v, but actually got (%T) %#v.", expected, expected, actual, actual)
+			return
+		}
 	}
 }
 

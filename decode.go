@@ -6,6 +6,7 @@ import (
 	"github.com/reiver/go-cast"
 
 	"bytes"
+	"database/sql"
 	"errors"
 	"fmt"
 	"reflect"
@@ -239,10 +240,20 @@ func decode(data map[string][]interface{}, v interface{}) error {
 					return err
 				}
 				castedValue = casted
-
 			default:
-				err := fmt.Errorf("Cannot cast to into something of type %T, for struct field name %q.", reflectedFieldValue.Interface(), name)
-				return err
+				{
+					pointerToReflectedFieldValue := reflectedFieldValue.Addr()
+					switch x := pointerToReflectedFieldValue.Interface().(type) {
+					case sql.Scanner:
+						if err := x.Scan(value); nil != err {
+							return err
+						}
+						continue
+					default:
+						err := fmt.Errorf("Cannot cast into something of type %T, for struct field name %q.", x, name)
+						return err
+					}
+				}
 			}
 		}
 

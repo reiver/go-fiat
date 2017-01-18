@@ -44,6 +44,10 @@ func TestDecoderDecode(t *testing.T) {
 		ShortM3  string `fiat:"m3_short"`
 		LongM3   string `fiat:"m3_long"`
 		NormalM3 string `fiat:"m3_normal"`
+
+		SStr1 string `fiat:"sstr1"`
+		SStr2 string `fiat.name:"sstr2"`
+		SStr3 string `fiat:"sstr3"`
 	}
 
 	var src sourceStruct
@@ -86,6 +90,10 @@ func TestDecoderDecode(t *testing.T) {
 	src.NormalM3 = "not this either m3"
 	src.LongM3   = "m3 THIS!"
 
+	src.SStr1 = "Str ONE"
+	src.SStr2 = "Str TWO"
+	src.SStr3 = "Str THREE"
+
 	type destinationStruct struct {
 		ShouldBeFalse bool
 		ShouldBeTrue  bool
@@ -102,7 +110,6 @@ func TestDecoderDecode(t *testing.T) {
 		F1a bool   `fiat:"ONE_a"`
 		F1b int64  `fiat:"ONE_b"`
 		F1c string `fiat:"ONE_c"`
-
 		F2a bool   `fiat.name:"TWO_a"`
 		F2b int64  `fiat.name:"TWO_b"`
 		F2c string `fiat.name:"TWO_c"`
@@ -114,6 +121,10 @@ func TestDecoderDecode(t *testing.T) {
 		M1 string `fiat:"m1_short" fiat.name:"m1_normal" fiat.target.name:"m1_long"`
 		M2 string `fiat:"m2_short" fiat.name:"m2_normal" fiat.target.name:"m2_long"`
 		M3 string `fiat:"m3_short" fiat.name:"m3_normal" fiat.target.name:"m3_long"`
+
+		SStr1 scannableString `fiat:"sstr1"`
+		SStr2 scannableString `fiat.name:"sstr2"`
+		SStr3 scannableString `fiat.target.name:"sstr3"`
 	}
 
 	var dest destinationStruct
@@ -224,5 +235,42 @@ func TestDecoderDecode(t *testing.T) {
 	if expected, actual := "m3 THIS!", dest.M3; expected != actual {
 		t.Errorf("Expected (%T) %#v, but actually got (%T) %#v.", expected, expected, actual, actual)
 		return
+	}
+
+	{
+		actual, err := dest.SStr1.String()
+		if nil != err {
+			t.Errorf("Did not expect an error, but actually got one: (%T) %v", err, err)
+			return
+		}
+
+		if expected := "Str ONE"; expected != actual {
+			t.Errorf("Expected (%T) %#v, but actually got (%T) %#v.", expected, expected, actual, actual)
+			return
+		}
+	}
+	{
+		actual, err := dest.SStr2.String()
+		if nil != err {
+			t.Errorf("Did not expect an error, but actually got one: (%T) %v", err, err)
+			return
+		}
+
+		if expected := "Str TWO"; expected != actual {
+			t.Errorf("Expected (%T) %#v, but actually got (%T) %#v.", expected, expected, actual, actual)
+			return
+		}
+	}
+	{
+		actual, err := dest.SStr3.String()
+		if nil != err {
+			t.Errorf("Did not expect an error, but actually got one: (%T) %v", err, err)
+			return
+		}
+
+		if expected := "Str THREE"; expected != actual {
+			t.Errorf("Expected (%T) %#v, but actually got (%T) %#v.", expected, expected, actual, actual)
+			return
+		}
 	}
 }
